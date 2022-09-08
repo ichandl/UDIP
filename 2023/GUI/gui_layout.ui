@@ -6,14 +6,14 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>871</width>
-    <height>563</height>
+    <width>1090</width>
+    <height>772</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>UDIP Viewer</string>
   </property>
-  <widget class="QWidget" name="Main">
+  <widget class="QWidget" name="MainWidget">
    <layout class="QHBoxLayout" name="horizontalLayout">
     <item>
      <widget class="QGroupBox" name="ControlsBox">
@@ -36,7 +36,7 @@
        <item>
         <widget class="QGroupBox" name="SweepSelectionBox">
          <property name="title">
-          <string>Sweep Selection</string>
+          <string>Plot Settings</string>
          </property>
          <layout class="QGridLayout" name="SweepInfo">
           <property name="topMargin">
@@ -45,43 +45,35 @@
           <item row="0" column="1">
            <layout class="QVBoxLayout" name="PlotTypeContainer">
             <item>
-             <widget class="QRadioButton" name="BurstSweepButton">
-              <property name="text">
-               <string>Burst Sweep</string>
+             <widget class="QComboBox" name="PlotTypeCombo">
+              <property name="currentIndex">
+               <number>3</number>
               </property>
-              <property name="autoExclusive">
-               <bool>false</bool>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QRadioButton" name="MediumSweepButton">
-              <property name="text">
-               <string>Medium Sweep</string>
-              </property>
-              <property name="autoExclusive">
-               <bool>false</bool>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QRadioButton" name="LargeSweepButton">
-              <property name="text">
-               <string>Large Sweep</string>
-              </property>
-              <property name="autoExclusive">
-               <bool>false</bool>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QRadioButton" name="SensorSweepButton">
-              <property name="text">
-               <string>Sensor</string>
-              </property>
-              <property name="autoExclusive">
-               <bool>false</bool>
-              </property>
+              <item>
+               <property name="text">
+                <string>Sensor</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Constant</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Burst Sweep</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Medium Sweep</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Large Sweep</string>
+               </property>
+              </item>
              </widget>
             </item>
            </layout>
@@ -108,7 +100,7 @@
                <string>Time</string>
               </property>
               <property name="autoExclusive">
-               <bool>false</bool>
+               <bool>true</bool>
               </property>
              </widget>
             </item>
@@ -118,11 +110,41 @@
                <string>Index</string>
               </property>
               <property name="autoExclusive">
-               <bool>false</bool>
+               <bool>true</bool>
               </property>
              </widget>
             </item>
            </layout>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="SweepSettingsBox">
+         <property name="title">
+          <string>Sweep Settings</string>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_4">
+          <item>
+           <widget class="QCheckBox" name="SweepAmp0">
+            <property name="text">
+             <string>Amp 0</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="SweepAmp1">
+            <property name="text">
+             <string>Amp 1</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="SweepAmp2">
+            <property name="text">
+             <string>Amp 2</string>
+            </property>
+           </widget>
           </item>
          </layout>
         </widget>
@@ -134,49 +156,97 @@
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_3">
           <item>
-           <widget class="QSpinBox" name="SweepNumber"/>
+           <widget class="QComboBox" name="IndexSelectionCombo">
+            <property name="currentIndex">
+             <number>-1</number>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="IndexButtonBox">
+            <property name="topMargin">
+             <number>0</number>
+            </property>
+            <item>
+             <widget class="QPushButton" name="PreviousButton">
+              <property name="text">
+               <string>Previous</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="NextButton">
+              <property name="text">
+               <string>Next</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
           </item>
          </layout>
         </widget>
        </item>
        <item>
         <widget class="QGroupBox" name="TimeSelectionBox">
+         <property name="enabled">
+          <bool>true</bool>
+         </property>
          <property name="title">
           <string>Time Selection</string>
          </property>
-         <layout class="QGridLayout" name="TimeBox">
-          <item row="0" column="1">
-           <widget class="QLineEdit" name="StartTextBox">
-            <property name="enabled">
-             <bool>true</bool>
+         <layout class="QVBoxLayout" name="verticalLayout_5">
+          <item>
+           <widget class="QFrame" name="TimeStartStopBox">
+            <property name="lineWidth">
+             <number>0</number>
             </property>
+            <layout class="QFormLayout" name="TimeBoxStartStop">
+             <item row="0" column="0">
+              <widget class="QLabel" name="StartLabel">
+               <property name="enabled">
+                <bool>true</bool>
+               </property>
+               <property name="text">
+                <string>Start Time:</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="0">
+              <widget class="QLabel" name="EndLabel">
+               <property name="enabled">
+                <bool>true</bool>
+               </property>
+               <property name="text">
+                <string>End Time:</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="1">
+              <widget class="QDoubleSpinBox" name="StartTime"/>
+             </item>
+             <item row="1" column="1">
+              <widget class="QDoubleSpinBox" name="EndTime"/>
+             </item>
+            </layout>
            </widget>
           </item>
-          <item row="0" column="0">
-           <widget class="QLabel" name="StartLabel">
-            <property name="enabled">
-             <bool>true</bool>
+          <item>
+           <widget class="QFrame" name="TimeMonoBox">
+            <property name="lineWidth">
+             <number>0</number>
             </property>
-            <property name="text">
-             <string>Start Time:</string>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="0">
-           <widget class="QLabel" name="EndLabel">
-            <property name="enabled">
-             <bool>true</bool>
-            </property>
-            <property name="text">
-             <string>End Time:</string>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="1">
-           <widget class="QLineEdit" name="EndTextBox">
-            <property name="enabled">
-             <bool>true</bool>
-            </property>
+            <layout class="QFormLayout" name="TimeBoxMono">
+             <item row="0" column="0">
+              <widget class="QLabel" name="TimeMonoLabel">
+               <property name="text">
+                <string>Time:         </string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="1">
+              <widget class="QDoubleSpinBox" name="TimeMono"/>
+             </item>
+            </layout>
            </widget>
           </item>
          </layout>
@@ -224,7 +294,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>871</width>
+     <width>1090</width>
      <height>21</height>
     </rect>
    </property>
@@ -240,5 +310,54 @@
   </customwidget>
  </customwidgets>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>PreviousButton</sender>
+   <signal>clicked()</signal>
+   <receiver>PlotButton</receiver>
+   <slot>click()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>75</x>
+     <y>275</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>30</x>
+     <y>516</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>NextButton</sender>
+   <signal>clicked()</signal>
+   <receiver>PlotButton</receiver>
+   <slot>click()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>237</x>
+     <y>273</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>237</x>
+     <y>519</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>ControlsBox</sender>
+   <signal>clicked()</signal>
+   <receiver>PlotButton</receiver>
+   <slot>click()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>99</x>
+     <y>35</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>78</x>
+     <y>507</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>
