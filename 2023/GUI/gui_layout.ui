@@ -16,7 +16,7 @@
   <widget class="QWidget" name="MainWidget">
    <layout class="QHBoxLayout" name="horizontalLayout">
     <item>
-     <widget class="QGroupBox" name="ControlsBox">
+     <widget class="QGroupBox" name="verticalGroupBox">
       <property name="minimumSize">
        <size>
         <width>250</width>
@@ -29,115 +29,253 @@
         <height>16777215</height>
        </size>
       </property>
-      <property name="title">
-       <string>Controls</string>
-      </property>
-      <layout class="QVBoxLayout" name="verticalLayout_2">
+      <layout class="QVBoxLayout" name="verticalLayout_11">
+       <property name="sizeConstraint">
+        <enum>QLayout::SetFixedSize</enum>
+       </property>
        <item>
-        <widget class="QTabWidget" name="ControlTabs">
-         <property name="currentIndex">
-          <number>0</number>
+        <widget class="QGroupBox" name="PlotSelectionBox">
+         <property name="title">
+          <string>Plot Selection</string>
          </property>
-         <widget class="QWidget" name="SweepTab">
-          <attribute name="title">
-           <string>Plot Sweep</string>
-          </attribute>
-          <layout class="QVBoxLayout" name="verticalLayout_6">
-           <item>
-            <widget class="QGroupBox" name="SweepDataSelectionBox">
-             <property name="title">
-              <string>Sweep Data Selection</string>
-             </property>
-             <layout class="QVBoxLayout" name="verticalLayout_3">
+         <layout class="QVBoxLayout" name="verticalLayout_12">
+          <item>
+           <widget class="QComboBox" name="PlotSelectionCombo"/>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="PlotButtonBox">
+            <item>
+             <widget class="QPushButton" name="RemovePlotButton">
+              <property name="text">
+               <string>Remove</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="AddPlotButton">
+              <property name="text">
+               <string>Add</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <widget class="QPushButton" name="PlotButton">
+            <property name="text">
+             <string>Plot</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="ControlsBox">
+         <property name="minimumSize">
+          <size>
+           <width>250</width>
+           <height>0</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>250</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="title">
+          <string>Controls</string>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_2">
+          <item>
+           <widget class="QTabWidget" name="ControlTabs">
+            <property name="currentIndex">
+             <number>0</number>
+            </property>
+            <widget class="QWidget" name="SweepTab">
+             <attribute name="title">
+              <string>Plot Sweep</string>
+             </attribute>
+             <layout class="QVBoxLayout" name="verticalLayout_6">
               <item>
-               <layout class="QFormLayout" name="IndexTypeBox">
-                <item row="0" column="0">
-                 <widget class="QLabel" name="IndexMethodLabel">
-                  <property name="text">
-                   <string>Index Method:</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="0" column="1">
-                 <layout class="QVBoxLayout" name="IndexTypeContainer">
-                  <item>
-                   <widget class="QRadioButton" name="TimeIndexButton">
-                    <property name="text">
-                     <string>Time</string>
-                    </property>
-                    <property name="autoExclusive">
-                     <bool>true</bool>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QRadioButton" name="IndexIndexButton">
-                    <property name="text">
-                     <string>Index</string>
-                    </property>
-                    <property name="autoExclusive">
-                     <bool>true</bool>
-                    </property>
-                   </widget>
-                  </item>
-                 </layout>
-                </item>
-               </layout>
-              </item>
-              <item>
-               <widget class="QGroupBox" name="IndexSelectionBox">
+               <widget class="QGroupBox" name="SweepDataSelectionBox">
                 <property name="title">
-                 <string>Index Selection</string>
+                 <string>Sweep Data Selection</string>
                 </property>
-                <layout class="QVBoxLayout" name="verticalLayout_5">
+                <layout class="QVBoxLayout" name="verticalLayout_3">
                  <item>
-                  <widget class="QComboBox" name="IndexSelectionCombo">
-                   <property name="currentIndex">
-                    <number>-1</number>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <layout class="QHBoxLayout" name="IndexButtonBox">
-                   <property name="topMargin">
-                    <number>0</number>
-                   </property>
-                   <item>
-                    <widget class="QPushButton" name="PreviousButton">
+                  <layout class="QFormLayout" name="IndexTypeBox">
+                   <item row="0" column="0">
+                    <widget class="QLabel" name="IndexMethodLabel">
                      <property name="text">
-                      <string>Previous</string>
+                      <string>Index Method:</string>
                      </property>
                     </widget>
                    </item>
-                   <item>
-                    <widget class="QPushButton" name="NextButton">
+                   <item row="0" column="1">
+                    <layout class="QVBoxLayout" name="IndexTypeContainer">
+                     <item>
+                      <widget class="QRadioButton" name="TimeIndexButton">
+                       <property name="text">
+                        <string>Time</string>
+                       </property>
+                       <property name="autoExclusive">
+                        <bool>true</bool>
+                       </property>
+                      </widget>
+                     </item>
+                     <item>
+                      <widget class="QRadioButton" name="IndexIndexButton">
+                       <property name="text">
+                        <string>Index</string>
+                       </property>
+                       <property name="autoExclusive">
+                        <bool>true</bool>
+                       </property>
+                      </widget>
+                     </item>
+                    </layout>
+                   </item>
+                   <item row="1" column="0">
+                    <widget class="QLabel" name="SweepTypeLabel">
                      <property name="text">
-                      <string>Next</string>
+                      <string>Sweep Type</string>
                      </property>
+                    </widget>
+                   </item>
+                   <item row="1" column="1">
+                    <widget class="QComboBox" name="SweepTypeCombo">
+                     <item>
+                      <property name="text">
+                       <string>Normal</string>
+                      </property>
+                     </item>
+                     <item>
+                      <property name="text">
+                       <string>Constant</string>
+                      </property>
+                     </item>
                     </widget>
                    </item>
                   </layout>
                  </item>
+                 <item>
+                  <widget class="QGroupBox" name="IndexSelectionBox">
+                   <property name="title">
+                    <string>Index Selection</string>
+                   </property>
+                   <layout class="QVBoxLayout" name="verticalLayout_5">
+                    <item>
+                     <widget class="QComboBox" name="IndexSelectionCombo">
+                      <property name="currentIndex">
+                       <number>-1</number>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <layout class="QHBoxLayout" name="IndexButtonBox">
+                      <property name="topMargin">
+                       <number>0</number>
+                      </property>
+                      <item>
+                       <widget class="QPushButton" name="PreviousButton">
+                        <property name="text">
+                         <string>Previous</string>
+                        </property>
+                       </widget>
+                      </item>
+                      <item>
+                       <widget class="QPushButton" name="NextButton">
+                        <property name="text">
+                         <string>Next</string>
+                        </property>
+                       </widget>
+                      </item>
+                     </layout>
+                    </item>
+                   </layout>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QGroupBox" name="SweepTimeBox">
+                   <property name="maximumSize">
+                    <size>
+                     <width>16777215</width>
+                     <height>65</height>
+                    </size>
+                   </property>
+                   <property name="title">
+                    <string>Time Selection </string>
+                   </property>
+                   <layout class="QFormLayout" name="formLayout">
+                    <item row="1" column="0">
+                     <widget class="QLabel" name="TimeMonoLabel">
+                      <property name="text">
+                       <string>Time (s):         </string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="1" column="1">
+                     <widget class="QDoubleSpinBox" name="TimeMono">
+                      <property name="maximum">
+                       <double>9999.000000000000000</double>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </widget>
+                 </item>
                 </layout>
                </widget>
               </item>
               <item>
-               <widget class="QGroupBox" name="SweepTimeBox">
+               <widget class="QGroupBox" name="AmpSelectionBox">
                 <property name="title">
-                 <string>Time Selection </string>
+                 <string>Amp Selection</string>
                 </property>
-                <layout class="QFormLayout" name="formLayout">
-                 <item row="1" column="0">
-                  <widget class="QLabel" name="TimeMonoLabel">
+                <layout class="QVBoxLayout" name="verticalLayout_4">
+                 <item>
+                  <widget class="QCheckBox" name="SweepAmp0">
                    <property name="text">
-                    <string>Time (s):         </string>
+                    <string>Amp 0</string>
                    </property>
                   </widget>
                  </item>
-                 <item row="1" column="1">
-                  <widget class="QDoubleSpinBox" name="TimeMono">
-                   <property name="maximum">
-                    <double>9999.000000000000000</double>
+                 <item>
+                  <widget class="QCheckBox" name="SweepAmp1">
+                   <property name="text">
+                    <string>Amp 1</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QCheckBox" name="SweepAmp2">
+                   <property name="text">
+                    <string>Amp 2</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </widget>
+              </item>
+              <item>
+               <widget class="QGroupBox" name="ConstantSelectionBox">
+                <property name="title">
+                 <string>Constant Selection</string>
+                </property>
+                <layout class="QVBoxLayout" name="verticalLayout_10">
+                 <item>
+                  <widget class="QCheckBox" name="PD1ConstCheck">
+                   <property name="text">
+                    <string>Photodiode 1</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QCheckBox" name="PD2ConstCheck">
+                   <property name="text">
+                    <string>Photodiode 2</string>
                    </property>
                   </widget>
                  </item>
@@ -146,185 +284,169 @@
               </item>
              </layout>
             </widget>
-           </item>
-           <item>
-            <widget class="QGroupBox" name="AmpSelectionBox">
-             <property name="title">
-              <string>Amp Selection</string>
-             </property>
-             <layout class="QVBoxLayout" name="verticalLayout_4">
+            <widget class="QWidget" name="SensTab">
+             <attribute name="title">
+              <string>Plot Sensor</string>
+             </attribute>
+             <layout class="QVBoxLayout" name="verticalLayout_7">
               <item>
-               <widget class="QCheckBox" name="SweepAmp0">
-                <property name="text">
-                 <string>Amp 0</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QCheckBox" name="SweepAmp1">
-                <property name="text">
-                 <string>Amp 1</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QCheckBox" name="SweepAmp2">
-                <property name="text">
-                 <string>Amp 2</string>
-                </property>
-               </widget>
-              </item>
-             </layout>
-            </widget>
-           </item>
-          </layout>
-         </widget>
-         <widget class="QWidget" name="SensConstTab">
-          <attribute name="title">
-           <string>Plot Sensor or Constant</string>
-          </attribute>
-          <layout class="QVBoxLayout" name="verticalLayout_7">
-           <item>
-            <widget class="QGroupBox" name="SensDataSelectionBox">
-             <property name="title">
-              <string>Data Selection</string>
-             </property>
-             <layout class="QVBoxLayout" name="verticalLayout_8">
-              <item>
-               <widget class="QGroupBox" name="SensTimeSelection">
+               <widget class="QGroupBox" name="SensDataSelectionBox">
                 <property name="title">
-                 <string>Time Selection</string>
+                 <string>Data Selection</string>
                 </property>
-                <layout class="QGridLayout" name="gridLayout">
-                 <property name="bottomMargin">
-                  <number>9</number>
-                 </property>
-                 <item row="0" column="0">
-                  <widget class="QLabel" name="StartTimeLabel">
-                   <property name="text">
-                    <string>Start Time (s):</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="1" column="0">
-                  <widget class="QLabel" name="EndTimeLabel">
-                   <property name="text">
-                    <string>End Time (s):</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="0" column="1">
-                  <widget class="QDoubleSpinBox" name="StartTime">
-                   <property name="maximum">
-                    <double>9999.000000000000000</double>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="1" column="1">
-                  <widget class="QDoubleSpinBox" name="EndTime">
-                   <property name="maximum">
-                    <double>9999.000000000000000</double>
-                   </property>
-                  </widget>
-                 </item>
-                </layout>
-               </widget>
-              </item>
-              <item>
-               <widget class="QGroupBox" name="groupBox">
-                <property name="title">
-                 <string>Sensor Selection</string>
-                </property>
-                <layout class="QVBoxLayout" name="verticalLayout_9">
+                <layout class="QVBoxLayout" name="verticalLayout_8">
                  <item>
-                  <widget class="QCheckBox" name="XAccelCheck">
-                   <property name="text">
-                    <string>X Accelerometer</string>
+                  <widget class="QGroupBox" name="SensTimeSelection">
+                   <property name="title">
+                    <string>Time Selection</string>
                    </property>
+                   <layout class="QGridLayout" name="gridLayout">
+                    <property name="bottomMargin">
+                     <number>9</number>
+                    </property>
+                    <item row="0" column="0">
+                     <widget class="QLabel" name="StartTimeLabel">
+                      <property name="text">
+                       <string>Start Time (s):</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="1" column="0">
+                     <widget class="QLabel" name="EndTimeLabel">
+                      <property name="text">
+                       <string>End Time (s):</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="0" column="1">
+                     <widget class="QDoubleSpinBox" name="StartTime">
+                      <property name="maximum">
+                       <double>9999.000000000000000</double>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="1" column="1">
+                     <widget class="QDoubleSpinBox" name="EndTime">
+                      <property name="maximum">
+                       <double>9999.000000000000000</double>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
                   </widget>
                  </item>
                  <item>
-                  <widget class="QCheckBox" name="YAccelCheck">
-                   <property name="text">
-                    <string>Y Accelerometer</string>
+                  <widget class="QGroupBox" name="SensorSelectionBox">
+                   <property name="title">
+                    <string>Sensor Selection</string>
                    </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QCheckBox" name="ZAccelCheck">
-                   <property name="text">
-                    <string>Z Accelerometer</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QCheckBox" name="ZAnaAccelCheck">
-                   <property name="text">
-                    <string>Z Analog Accelerometer</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QCheckBox" name="XGyroCheck">
-                   <property name="text">
-                    <string>X Gyro</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QCheckBox" name="YGyroTemp">
-                   <property name="text">
-                    <string>Y Gyro</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QCheckBox" name="ZGyroCheck">
-                   <property name="text">
-                    <string>Z Gyro</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QCheckBox" name="XMagCheck">
-                   <property name="text">
-                    <string>X Mag</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QCheckBox" name="YMagCheck">
-                   <property name="text">
-                    <string>Y Mag</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QCheckBox" name="ZMagCheck">
-                   <property name="text">
-                    <string>Z Mag</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QCheckBox" name="DTempCheck">
-                   <property name="text">
-                    <string>D Temp</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QCheckBox" name="PTempCheck">
-                   <property name="text">
-                    <string>P Temp</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QCheckBox" name="STempCheck">
-                   <property name="text">
-                    <string>S Temp</string>
-                   </property>
+                   <layout class="QVBoxLayout" name="verticalLayout_9">
+                    <item>
+                     <widget class="QCheckBox" name="XAccelCheck">
+                      <property name="text">
+                       <string>X Accelerometer</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QCheckBox" name="YAccelCheck">
+                      <property name="text">
+                       <string>Y Accelerometer</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QCheckBox" name="ZAccelCheck">
+                      <property name="text">
+                       <string>Z Accelerometer</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QCheckBox" name="ZAnaAccelCheck">
+                      <property name="text">
+                       <string>Z Analog Accelerometer</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QCheckBox" name="XGyroCheck">
+                      <property name="text">
+                       <string>X Gyro</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QCheckBox" name="YGyroCheck">
+                      <property name="text">
+                       <string>Y Gyro</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QCheckBox" name="ZGyroCheck">
+                      <property name="text">
+                       <string>Z Gyro</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QCheckBox" name="XMagCheck">
+                      <property name="text">
+                       <string>X Mag</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QCheckBox" name="YMagCheck">
+                      <property name="text">
+                       <string>Y Mag</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QCheckBox" name="ZMagCheck">
+                      <property name="text">
+                       <string>Z Mag</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QCheckBox" name="DTempCheck">
+                      <property name="text">
+                       <string>D Temp</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QCheckBox" name="PTempCheck">
+                      <property name="text">
+                       <string>P Temp</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QCheckBox" name="STempCheck">
+                      <property name="text">
+                       <string>S Temp</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QCheckBox" name="PD1Check">
+                      <property name="text">
+                       <string>Photodiode 1</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QCheckBox" name="PD2Check">
+                      <property name="text">
+                       <string>Photodiode 2</string>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
                   </widget>
                  </item>
                 </layout>
@@ -332,9 +454,9 @@
               </item>
              </layout>
             </widget>
-           </item>
-          </layout>
-         </widget>
+           </widget>
+          </item>
+         </layout>
         </widget>
        </item>
        <item>
@@ -350,13 +472,6 @@
          </property>
         </spacer>
        </item>
-       <item>
-        <widget class="QPushButton" name="PlotButton">
-         <property name="text">
-          <string>Plot</string>
-         </property>
-        </widget>
-       </item>
       </layout>
      </widget>
     </item>
@@ -367,7 +482,7 @@
       </property>
       <layout class="QVBoxLayout" name="verticalLayout">
        <item>
-        <widget class="PlotWidget" name="PlotDisplay" native="true"/>
+        <widget class="GraphicsLayoutWidget" name="GraphicsLayout" native="true"/>
        </item>
       </layout>
      </widget>
@@ -388,61 +503,12 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>PlotWidget</class>
+   <class>GraphicsLayoutWidget</class>
    <extends>QWidget</extends>
    <header>pyqtgraph</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
  <resources/>
- <connections>
-  <connection>
-   <sender>PreviousButton</sender>
-   <signal>clicked()</signal>
-   <receiver>PlotButton</receiver>
-   <slot>click()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>75</x>
-     <y>275</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>30</x>
-     <y>516</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>NextButton</sender>
-   <signal>clicked()</signal>
-   <receiver>PlotButton</receiver>
-   <slot>click()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>237</x>
-     <y>273</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>237</x>
-     <y>519</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>ControlsBox</sender>
-   <signal>clicked()</signal>
-   <receiver>PlotButton</receiver>
-   <slot>click()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>99</x>
-     <y>35</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>78</x>
-     <y>507</y>
-    </hint>
-   </hints>
-  </connection>
- </connections>
+ <connections/>
 </ui>
