@@ -4,11 +4,13 @@ All GUI setup and computation is done here
 
 If you are planning on reading this code, you better buckle up
 
+@TODO
+Change how indexing currently works, it currently is a bunch of for loops and a bunch of misc lists 
+Sensor Units :'(
 
 References:
 pyqtgraph/examples/MultiplePlotAxes.py
 pyqtgraph/examples/MultiPlotWidget.py
-
 '''
 # Import
 # Custom Imports
@@ -103,14 +105,12 @@ class MasterWindow(Ui_UDIP_Viewer):
     def updGui(self):
         """
         Used to Update the GUI's logic and display
-
-        This whole function is retarded ... for now
         """
         # Radio Button Logic
         self.SweepTimeBox.setEnabled(self.TimeIndexButton.isChecked())                 
         self.IndexSelectionBox.setEnabled(self.IndexIndexButton.isChecked())
 
-        # Sweep Type Logic
+        # Sweep Type Logic: Constant vs Dynamic
         i = self.IndexSelectionCombo.currentIndex()
         self.IndexSelectionCombo.clear()
         self.IndexSelectionCombo.setCurrentText("")
@@ -121,6 +121,12 @@ class MasterWindow(Ui_UDIP_Viewer):
             self.ConstantSelectionBox.setVisible(True)
             self.IndexSelectionCombo.addItems([str(x) for x in self.ind_constant])
         self.IndexSelectionCombo.setCurrentIndex(i)
+
+        # Plot type logic: Sweep vs Sensor
+        if self.ControlTabs.currentIndex == 1:
+            self.SensorDataBox.setVisible(True)
+        elif self.ControlTabs.currentIndex == 0:
+            self.SensorDataBox.setVisible(True)
 
         # Set the currently selected plot
         self.SelectedPlot = self.PlotSelectionCombo.currentData()
@@ -233,6 +239,50 @@ class MasterWindow(Ui_UDIP_Viewer):
         # Using the chosen packet number, we plot the corresponding sweep
         Selection = self.packets[indexNum]
 
+        # Update GUI Logic and display relevant sensor data
+        self.TimeMono.setValue(Selection.tInitial/1000)
+        for i, p in enumerate(self.sweep_time):
+            if p["index"] == indexNum:
+                self.IndexSelectionCombo.setCurrentIndex(i)
+                break
+        
+        self.IndexSelectionCombo.setCurrentIndex(self.ind_medium.index(indexNum))
+
+        SensInit = self.packets[self.find_closest("Sensor", Selection.tInitial/1000)]
+        SensFinal = self.packets[self.find_closest("Sensor", Selection.tFinal/1000)]
+
+        self.SensorInitialTable.item(0,0).setText(str(round(SensInit.accX,3)))
+        self.SensorInitialTable.item(1,0).setText(str(round(SensInit.accY,3)))
+        self.SensorInitialTable.item(2,0).setText(str(round(SensInit.accZ,3)))
+        self.SensorInitialTable.item(3,0).setText(str(round(SensInit.accH,3)))
+        self.SensorInitialTable.item(4,0).setText(str(round(SensInit.gyroX,3)))
+        self.SensorInitialTable.item(5,0).setText(str(round(SensInit.gyroY,3)))
+        self.SensorInitialTable.item(6,0).setText(str(round(SensInit.gyroZ,3)))
+        self.SensorInitialTable.item(7,0).setText(str(round(SensInit.magX,3)))
+        self.SensorInitialTable.item(8,0).setText(str(round(SensInit.magY,3)))
+        self.SensorInitialTable.item(9,0).setText(str(round(SensInit.magZ,3)))
+        self.SensorInitialTable.item(10,0).setText(str(round(SensInit.temperature_d,3)))
+        self.SensorInitialTable.item(11,0).setText(str(round(SensInit.temperature_p,3)))
+        self.SensorInitialTable.item(12,0).setText(str(round(SensInit.temperature_s,3)))
+        self.SensorInitialTable.item(13,0).setText(str(round(SensInit.pd_1,3)))
+        self.SensorInitialTable.item(14,0).setText(str(round(SensInit.pd_2,3)))
+
+        self.SensorFinalTable.item(0,0).setText(str(round(SensFinal.accX,3)))
+        self.SensorFinalTable.item(1,0).setText(str(round(SensFinal.accY,3)))
+        self.SensorFinalTable.item(2,0).setText(str(round(SensFinal.accZ,3)))
+        self.SensorFinalTable.item(3,0).setText(str(round(SensFinal.accH,3)))
+        self.SensorFinalTable.item(4,0).setText(str(round(SensFinal.gyroX,3)))
+        self.SensorFinalTable.item(5,0).setText(str(round(SensFinal.gyroY,3)))
+        self.SensorFinalTable.item(6,0).setText(str(round(SensFinal.gyroZ,3)))
+        self.SensorFinalTable.item(7,0).setText(str(round(SensFinal.magX,3)))
+        self.SensorFinalTable.item(8,0).setText(str(round(SensFinal.magY,3)))
+        self.SensorFinalTable.item(9,0).setText(str(round(SensFinal.magZ,3)))
+        self.SensorFinalTable.item(10,0).setText(str(round(SensFinal.temperature_d,3)))
+        self.SensorFinalTable.item(11,0).setText(str(round(SensFinal.temperature_p,3)))
+        self.SensorFinalTable.item(12,0).setText(str(round(SensFinal.temperature_s,3)))
+        self.SensorFinalTable.item(13,0).setText(str(round(SensFinal.pd_1,3)))
+        self.SensorFinalTable.item(14,0).setText(str(round(SensFinal.pd_2,3)))
+
         # X is voltage always
         x = Selection.sweep.sweepVoltage
 
@@ -248,13 +298,57 @@ class MasterWindow(Ui_UDIP_Viewer):
             self.SelectedPlot.plot(x,y2,pen="r", name="Amp 2")
 
         # We do some Labeling
-        self.SelectedPlot.setTitle(title=f"Sweep {self.ind_medium.index(indexNum)} at {round(Selection.tInitial/1000,2)} seconds")
+        self.SelectedPlot.setTitle(title=f"Sweep {indexNum} at {round(Selection.tInitial/1000,2)} seconds")
         self.SelectedPlot.setLabel("bottom",text="Voltage",units="V")
         self.SelectedPlot.setLabel("left",text="Current",units="I")
 
     def Plot_Constant(self, indexNum):
         # Using the chosen packet number, we plot the corresponding sweep
         Selection = self.packets[indexNum]
+
+        # Update GUI Logic and display relevant sensor data
+        self.TimeMono.setValue(Selection.tInitial/1000)
+        for i, p in enumerate(self.constant_time):
+            if p["index"] == indexNum:
+                self.IndexSelectionCombo.setCurrentIndex(i)
+                break
+
+        self.IndexSelectionCombo.setCurrentIndex(self.ind_constant.index(indexNum))
+        
+        SensInit = self.packets[self.find_closest("Sensor", Selection.tInitial/1000)]
+        SensFinal = self.packets[self.find_closest("Sensor", Selection.tFinal/1000)]
+
+        self.SensorInitialTable.item(0,0).setText(str(round(SensInit.accX,3)))
+        self.SensorInitialTable.item(1,0).setText(str(round(SensInit.accY,3)))
+        self.SensorInitialTable.item(2,0).setText(str(round(SensInit.accZ,3)))
+        self.SensorInitialTable.item(3,0).setText(str(round(SensInit.accH,3)))
+        self.SensorInitialTable.item(4,0).setText(str(round(SensInit.gyroX,3)))
+        self.SensorInitialTable.item(5,0).setText(str(round(SensInit.gyroY,3)))
+        self.SensorInitialTable.item(6,0).setText(str(round(SensInit.gyroZ,3)))
+        self.SensorInitialTable.item(7,0).setText(str(round(SensInit.magX,3)))
+        self.SensorInitialTable.item(8,0).setText(str(round(SensInit.magY,3)))
+        self.SensorInitialTable.item(9,0).setText(str(round(SensInit.magZ,3)))
+        self.SensorInitialTable.item(10,0).setText(str(round(SensInit.temperature_d,3)))
+        self.SensorInitialTable.item(11,0).setText(str(round(SensInit.temperature_p,3)))
+        self.SensorInitialTable.item(12,0).setText(str(round(SensInit.temperature_s,3)))
+        self.SensorInitialTable.item(13,0).setText(str(round(SensInit.pd_1,3)))
+        self.SensorInitialTable.item(14,0).setText(str(round(SensInit.pd_2,3)))
+
+        self.SensorFinalTable.item(0,0).setText(str(round(SensFinal.accX,3)))
+        self.SensorFinalTable.item(1,0).setText(str(round(SensFinal.accY,3)))
+        self.SensorFinalTable.item(2,0).setText(str(round(SensFinal.accZ,3)))
+        self.SensorFinalTable.item(3,0).setText(str(round(SensFinal.accH,3)))
+        self.SensorFinalTable.item(4,0).setText(str(round(SensFinal.gyroX,3)))
+        self.SensorFinalTable.item(5,0).setText(str(round(SensFinal.gyroY,3)))
+        self.SensorFinalTable.item(6,0).setText(str(round(SensFinal.gyroZ,3)))
+        self.SensorFinalTable.item(7,0).setText(str(round(SensFinal.magX,3)))
+        self.SensorFinalTable.item(8,0).setText(str(round(SensFinal.magY,3)))
+        self.SensorFinalTable.item(9,0).setText(str(round(SensFinal.magZ,3)))
+        self.SensorFinalTable.item(10,0).setText(str(round(SensFinal.temperature_d,3)))
+        self.SensorFinalTable.item(11,0).setText(str(round(SensFinal.temperature_p,3)))
+        self.SensorFinalTable.item(12,0).setText(str(round(SensFinal.temperature_s,3)))
+        self.SensorFinalTable.item(13,0).setText(str(round(SensFinal.pd_1,3)))
+        self.SensorFinalTable.item(14,0).setText(str(round(SensFinal.pd_2,3)))
 
         # X is the number of computer clock steps (100)
         x = np.arange(0, Selection.nSteps, 1)
@@ -285,7 +379,7 @@ class MasterWindow(Ui_UDIP_Viewer):
             colorNum += 1
 
         # Labeling
-        self.SelectedPlot.setTitle(title=f"Sweep {self.ind_constant.index(indexNum)} at {round(Selection.tInitial/1000,2)} seconds")
+        self.SelectedPlot.setTitle(title=f"Sweep {indexNum} at {round(Selection.tInitial/1000,2)} seconds")
         self.SelectedPlot.setLabel("bottom",text="?")
         self.SelectedPlot.setLabel("left",text="?")
         
@@ -343,7 +437,6 @@ class MasterWindow(Ui_UDIP_Viewer):
                 pd2List.append(packet.pd_2)
         
 
-        
         # Plot Based on User Selection
         if self.XAccelCheck.isChecked():
             self.SelectedPlot.plot(timeSens, accXList,pen=pyqtgraph.mkColor(self.color_cycle[colorNum]), name="Accel X")
