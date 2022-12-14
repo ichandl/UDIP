@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1115</width>
-    <height>1149</height>
+    <width>1307</width>
+    <height>1354</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -159,6 +159,20 @@
                     </widget>
                    </item>
                   </layout>
+                 </item>
+                 <item>
+                  <widget class="QCheckBox" name="RemoveHystCheck">
+                   <property name="text">
+                    <string>Remove Hysteresis</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QCheckBox" name="PlotFitCheck">
+                   <property name="text">
+                    <string>Add Fit Curve</string>
+                   </property>
+                  </widget>
                  </item>
                  <item>
                   <widget class="QGroupBox" name="IndexSelectionBox">
@@ -460,6 +474,198 @@
         </widget>
        </item>
        <item>
+        <widget class="QGroupBox" name="groupBox">
+         <property name="title">
+          <string>Sensor Data</string>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_14">
+          <item>
+           <widget class="QTableWidget" name="SensorInitialTable">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="MinimumExpanding" vsizetype="Expanding">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>475</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>145</width>
+              <height>475</height>
+             </size>
+            </property>
+            <property name="verticalScrollBarPolicy">
+             <enum>Qt::ScrollBarAlwaysOff</enum>
+            </property>
+            <property name="horizontalScrollBarPolicy">
+             <enum>Qt::ScrollBarAlwaysOff</enum>
+            </property>
+            <row>
+             <property name="text">
+              <string>AccX</string>
+             </property>
+            </row>
+            <row>
+             <property name="text">
+              <string>AccY</string>
+             </property>
+            </row>
+            <row>
+             <property name="text">
+              <string>AccZ</string>
+             </property>
+            </row>
+            <row>
+             <property name="text">
+              <string>AccH</string>
+             </property>
+            </row>
+            <row>
+             <property name="text">
+              <string>GyroX</string>
+             </property>
+            </row>
+            <row>
+             <property name="text">
+              <string>GyroY</string>
+             </property>
+            </row>
+            <row>
+             <property name="text">
+              <string>GyroZ</string>
+             </property>
+            </row>
+            <row>
+             <property name="text">
+              <string>MagX</string>
+             </property>
+            </row>
+            <row>
+             <property name="text">
+              <string>MagY</string>
+             </property>
+            </row>
+            <row>
+             <property name="text">
+              <string>MagZ</string>
+             </property>
+            </row>
+            <row>
+             <property name="text">
+              <string>TempD</string>
+             </property>
+            </row>
+            <row>
+             <property name="text">
+              <string>TempP</string>
+             </property>
+            </row>
+            <row>
+             <property name="text">
+              <string>TempS</string>
+             </property>
+            </row>
+            <row>
+             <property name="text">
+              <string>PD1</string>
+             </property>
+            </row>
+            <row>
+             <property name="text">
+              <string>PD2</string>
+             </property>
+            </row>
+            <column>
+             <property name="text">
+              <string>Reading</string>
+             </property>
+            </column>
+            <item row="0" column="0">
+             <property name="text">
+              <string>N/A</string>
+             </property>
+            </item>
+            <item row="1" column="0">
+             <property name="text">
+              <string>N/A</string>
+             </property>
+            </item>
+            <item row="2" column="0">
+             <property name="text">
+              <string>N/A</string>
+             </property>
+            </item>
+            <item row="3" column="0">
+             <property name="text">
+              <string>N/A</string>
+             </property>
+            </item>
+            <item row="4" column="0">
+             <property name="text">
+              <string>N/A</string>
+             </property>
+            </item>
+            <item row="5" column="0">
+             <property name="text">
+              <string>N/A</string>
+             </property>
+            </item>
+            <item row="6" column="0">
+             <property name="text">
+              <string>N/A</string>
+             </property>
+            </item>
+            <item row="7" column="0">
+             <property name="text">
+              <string>N/A</string>
+             </property>
+            </item>
+            <item row="8" column="0">
+             <property name="text">
+              <string>N/A</string>
+             </property>
+            </item>
+            <item row="9" column="0">
+             <property name="text">
+              <string>N/A</string>
+             </property>
+            </item>
+            <item row="10" column="0">
+             <property name="text">
+              <string>N/A</string>
+             </property>
+            </item>
+            <item row="11" column="0">
+             <property name="text">
+              <string>N/A</string>
+             </property>
+            </item>
+            <item row="12" column="0">
+             <property name="text">
+              <string>N/A</string>
+             </property>
+            </item>
+            <item row="13" column="0">
+             <property name="text">
+              <string>N/A</string>
+             </property>
+            </item>
+            <item row="14" column="0">
+             <property name="text">
+              <string>N/A</string>
+             </property>
+            </item>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
         <spacer name="verticalSpacer">
          <property name="orientation">
           <enum>Qt::Vertical</enum>
@@ -487,390 +693,6 @@
       </layout>
      </widget>
     </item>
-    <item>
-     <widget class="QGroupBox" name="SensorDataBox">
-      <property name="minimumSize">
-       <size>
-        <width>185</width>
-        <height>1055</height>
-       </size>
-      </property>
-      <property name="maximumSize">
-       <size>
-        <width>185</width>
-        <height>1055</height>
-       </size>
-      </property>
-      <property name="title">
-       <string>Sensor Data</string>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
-      </property>
-      <layout class="QVBoxLayout" name="verticalLayout_13">
-       <item>
-        <widget class="QGroupBox" name="SensorInitialBox">
-         <property name="maximumSize">
-          <size>
-           <width>180</width>
-           <height>510</height>
-          </size>
-         </property>
-         <property name="title">
-          <string>Initial</string>
-         </property>
-         <layout class="QVBoxLayout" name="verticalLayout_15">
-          <item>
-           <widget class="QTableWidget" name="SensorInitialTable">
-            <property name="maximumSize">
-             <size>
-              <width>145</width>
-              <height>475</height>
-             </size>
-            </property>
-            <row>
-             <property name="text">
-              <string>AccX</string>
-             </property>
-            </row>
-            <row>
-             <property name="text">
-              <string>AccY</string>
-             </property>
-            </row>
-            <row>
-             <property name="text">
-              <string>AccZ</string>
-             </property>
-            </row>
-            <row>
-             <property name="text">
-              <string>AccH</string>
-             </property>
-            </row>
-            <row>
-             <property name="text">
-              <string>GyroX</string>
-             </property>
-            </row>
-            <row>
-             <property name="text">
-              <string>GyroY</string>
-             </property>
-            </row>
-            <row>
-             <property name="text">
-              <string>GyroZ</string>
-             </property>
-            </row>
-            <row>
-             <property name="text">
-              <string>MagX</string>
-             </property>
-            </row>
-            <row>
-             <property name="text">
-              <string>MagY</string>
-             </property>
-            </row>
-            <row>
-             <property name="text">
-              <string>MagZ</string>
-             </property>
-            </row>
-            <row>
-             <property name="text">
-              <string>TempD</string>
-             </property>
-            </row>
-            <row>
-             <property name="text">
-              <string>TempP</string>
-             </property>
-            </row>
-            <row>
-             <property name="text">
-              <string>TempS</string>
-             </property>
-            </row>
-            <row>
-             <property name="text">
-              <string>PD1</string>
-             </property>
-            </row>
-            <row>
-             <property name="text">
-              <string>PD2</string>
-             </property>
-            </row>
-            <column>
-             <property name="text">
-              <string>Reading</string>
-             </property>
-            </column>
-            <item row="0" column="0">
-             <property name="text">
-              <string>N/A</string>
-             </property>
-            </item>
-            <item row="1" column="0">
-             <property name="text">
-              <string>N/A</string>
-             </property>
-            </item>
-            <item row="2" column="0">
-             <property name="text">
-              <string>N/A</string>
-             </property>
-            </item>
-            <item row="3" column="0">
-             <property name="text">
-              <string>N/A</string>
-             </property>
-            </item>
-            <item row="4" column="0">
-             <property name="text">
-              <string>N/A</string>
-             </property>
-            </item>
-            <item row="5" column="0">
-             <property name="text">
-              <string>N/A</string>
-             </property>
-            </item>
-            <item row="6" column="0">
-             <property name="text">
-              <string>N/A</string>
-             </property>
-            </item>
-            <item row="7" column="0">
-             <property name="text">
-              <string>N/A</string>
-             </property>
-            </item>
-            <item row="8" column="0">
-             <property name="text">
-              <string>N/A</string>
-             </property>
-            </item>
-            <item row="9" column="0">
-             <property name="text">
-              <string>N/A</string>
-             </property>
-            </item>
-            <item row="10" column="0">
-             <property name="text">
-              <string>N/A</string>
-             </property>
-            </item>
-            <item row="11" column="0">
-             <property name="text">
-              <string>N/A</string>
-             </property>
-            </item>
-            <item row="12" column="0">
-             <property name="text">
-              <string>N/A</string>
-             </property>
-            </item>
-            <item row="13" column="0">
-             <property name="text">
-              <string>N/A</string>
-             </property>
-            </item>
-            <item row="14" column="0">
-             <property name="text">
-              <string>N/A</string>
-             </property>
-            </item>
-           </widget>
-          </item>
-         </layout>
-        </widget>
-       </item>
-       <item>
-        <widget class="QGroupBox" name="SensorFinalBox">
-         <property name="maximumSize">
-          <size>
-           <width>180</width>
-           <height>510</height>
-          </size>
-         </property>
-         <property name="title">
-          <string>Final</string>
-         </property>
-         <layout class="QVBoxLayout" name="verticalLayout_14">
-          <item>
-           <widget class="QTableWidget" name="SensorFinalTable">
-            <property name="maximumSize">
-             <size>
-              <width>145</width>
-              <height>475</height>
-             </size>
-            </property>
-            <row>
-             <property name="text">
-              <string>AccX</string>
-             </property>
-            </row>
-            <row>
-             <property name="text">
-              <string>AccY</string>
-             </property>
-            </row>
-            <row>
-             <property name="text">
-              <string>AccZ</string>
-             </property>
-            </row>
-            <row>
-             <property name="text">
-              <string>AccH</string>
-             </property>
-            </row>
-            <row>
-             <property name="text">
-              <string>GyroX</string>
-             </property>
-            </row>
-            <row>
-             <property name="text">
-              <string>GyroY</string>
-             </property>
-            </row>
-            <row>
-             <property name="text">
-              <string>GyroZ</string>
-             </property>
-            </row>
-            <row>
-             <property name="text">
-              <string>MagX</string>
-             </property>
-            </row>
-            <row>
-             <property name="text">
-              <string>MagY</string>
-             </property>
-            </row>
-            <row>
-             <property name="text">
-              <string>MagZ</string>
-             </property>
-            </row>
-            <row>
-             <property name="text">
-              <string>TempD</string>
-             </property>
-            </row>
-            <row>
-             <property name="text">
-              <string>TempP</string>
-             </property>
-            </row>
-            <row>
-             <property name="text">
-              <string>TempS</string>
-             </property>
-            </row>
-            <row>
-             <property name="text">
-              <string>PD1</string>
-             </property>
-            </row>
-            <row>
-             <property name="text">
-              <string>PD2</string>
-             </property>
-            </row>
-            <column>
-             <property name="text">
-              <string>Reading</string>
-             </property>
-            </column>
-            <item row="0" column="0">
-             <property name="text">
-              <string>N/A</string>
-             </property>
-            </item>
-            <item row="1" column="0">
-             <property name="text">
-              <string>N/A</string>
-             </property>
-            </item>
-            <item row="2" column="0">
-             <property name="text">
-              <string>N/A</string>
-             </property>
-            </item>
-            <item row="3" column="0">
-             <property name="text">
-              <string>N/A</string>
-             </property>
-            </item>
-            <item row="4" column="0">
-             <property name="text">
-              <string>N/A</string>
-             </property>
-            </item>
-            <item row="5" column="0">
-             <property name="text">
-              <string>N/A</string>
-             </property>
-            </item>
-            <item row="6" column="0">
-             <property name="text">
-              <string>N/A</string>
-             </property>
-            </item>
-            <item row="7" column="0">
-             <property name="text">
-              <string>N/A</string>
-             </property>
-            </item>
-            <item row="8" column="0">
-             <property name="text">
-              <string>N/A</string>
-             </property>
-            </item>
-            <item row="9" column="0">
-             <property name="text">
-              <string>N/A</string>
-             </property>
-            </item>
-            <item row="10" column="0">
-             <property name="text">
-              <string>N/A</string>
-             </property>
-            </item>
-            <item row="11" column="0">
-             <property name="text">
-              <string>N/A</string>
-             </property>
-            </item>
-            <item row="12" column="0">
-             <property name="text">
-              <string>N/A</string>
-             </property>
-            </item>
-            <item row="13" column="0">
-             <property name="text">
-              <string>N/A</string>
-             </property>
-            </item>
-            <item row="14" column="0">
-             <property name="text">
-              <string>N/A</string>
-             </property>
-            </item>
-           </widget>
-          </item>
-         </layout>
-        </widget>
-       </item>
-      </layout>
-     </widget>
-    </item>
    </layout>
   </widget>
   <widget class="QMenuBar" name="menubar">
@@ -878,7 +700,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1115</width>
+     <width>1307</width>
      <height>21</height>
     </rect>
    </property>

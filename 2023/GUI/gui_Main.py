@@ -7,6 +7,7 @@ If you are planning on reading this code, you better buckle up
 @TODO
 Change how indexing currently works, it currently is a bunch of for loops and a bunch of misc lists 
 Sensor Units :'(
+Synthesis
 
 References:
 pyqtgraph/examples/MultiplePlotAxes.py
@@ -245,12 +246,17 @@ class MasterWindow(Ui_UDIP_Viewer):
             if p["index"] == indexNum:
                 self.IndexSelectionCombo.setCurrentIndex(i)
                 break
+
+        # Index for Color Cycle
+        colorNum = 0
         
         self.IndexSelectionCombo.setCurrentIndex(self.ind_medium.index(indexNum))
 
+        # There are two sensor packets retrieved here, but the desision was made to use only the inital one at it matches the final 99% of the time
         SensInit = self.packets[self.find_closest("Sensor", Selection.tInitial/1000)]
-        SensFinal = self.packets[self.find_closest("Sensor", Selection.tFinal/1000)]
+        # SensFinal = self.packets[self.find_closest("Sensor", Selection.tFinal/1000)]
 
+        # Sensor Things
         self.SensorInitialTable.item(0,0).setText(str(round(SensInit.accX,3)))
         self.SensorInitialTable.item(1,0).setText(str(round(SensInit.accY,3)))
         self.SensorInitialTable.item(2,0).setText(str(round(SensInit.accZ,3)))
@@ -267,35 +273,71 @@ class MasterWindow(Ui_UDIP_Viewer):
         self.SensorInitialTable.item(13,0).setText(str(round(SensInit.pd_1,3)))
         self.SensorInitialTable.item(14,0).setText(str(round(SensInit.pd_2,3)))
 
-        self.SensorFinalTable.item(0,0).setText(str(round(SensFinal.accX,3)))
-        self.SensorFinalTable.item(1,0).setText(str(round(SensFinal.accY,3)))
-        self.SensorFinalTable.item(2,0).setText(str(round(SensFinal.accZ,3)))
-        self.SensorFinalTable.item(3,0).setText(str(round(SensFinal.accH,3)))
-        self.SensorFinalTable.item(4,0).setText(str(round(SensFinal.gyroX,3)))
-        self.SensorFinalTable.item(5,0).setText(str(round(SensFinal.gyroY,3)))
-        self.SensorFinalTable.item(6,0).setText(str(round(SensFinal.gyroZ,3)))
-        self.SensorFinalTable.item(7,0).setText(str(round(SensFinal.magX,3)))
-        self.SensorFinalTable.item(8,0).setText(str(round(SensFinal.magY,3)))
-        self.SensorFinalTable.item(9,0).setText(str(round(SensFinal.magZ,3)))
-        self.SensorFinalTable.item(10,0).setText(str(round(SensFinal.temperature_d,3)))
-        self.SensorFinalTable.item(11,0).setText(str(round(SensFinal.temperature_p,3)))
-        self.SensorFinalTable.item(12,0).setText(str(round(SensFinal.temperature_s,3)))
-        self.SensorFinalTable.item(13,0).setText(str(round(SensFinal.pd_1,3)))
-        self.SensorFinalTable.item(14,0).setText(str(round(SensFinal.pd_2,3)))
+
+        # self.SensorFinalTable.item(0,0).setText(str(round(SensFinal.accX,3)))
+        # self.SensorFinalTable.item(1,0).setText(str(round(SensFinal.accY,3)))
+        # self.SensorFinalTable.item(2,0).setText(str(round(SensFinal.accZ,3)))
+        # self.SensorFinalTable.item(3,0).setText(str(round(SensFinal.accH,3)))
+        # self.SensorFinalTable.item(4,0).setText(str(round(SensFinal.gyroX,3)))
+        # self.SensorFinalTable.item(5,0).setText(str(round(SensFinal.gyroY,3)))
+        # self.SensorFinalTable.item(6,0).setText(str(round(SensFinal.gyroZ,3)))
+        # self.SensorFinalTable.item(7,0).setText(str(round(SensFinal.magX,3)))
+        # self.SensorFinalTable.item(8,0).setText(str(round(SensFinal.magY,3)))
+        # self.SensorFinalTable.item(9,0).setText(str(round(SensFinal.magZ,3)))
+        # self.SensorFinalTable.item(10,0).setText(str(round(SensFinal.temperature_d,3)))
+        # self.SensorFinalTable.item(11,0).setText(str(round(SensFinal.temperature_p,3)))
+        # self.SensorFinalTable.item(12,0).setText(str(round(SensFinal.temperature_s,3)))
+        # self.SensorFinalTable.item(13,0).setText(str(round(SensFinal.pd_1,3)))
+        # self.SensorFinalTable.item(14,0).setText(str(round(SensFinal.pd_2,3)))
 
         # X is voltage always
         x = Selection.sweep.sweepVoltage
 
         # The current was amplified three times, user can choose amp level to display (or multiple)
         if self.SweepAmp0.isChecked():
-            y0 = Selection.sweep.adc0Curr
-            self.SelectedPlot.plot(x,y0,pen="g", name="Amp 0")
+            if self.RemoveHystCheck.isChecked():
+                x0, y0 = self.remove_hyst(x, Selection.sweep.adc0Curr)
+            else:
+                x0 = x
+                y0 = Selection.sweep.adc0Curr
+            
+            self.SelectedPlot.plot(x0,y0,pen=pyqtgraph.mkColor(self.color_cycle[colorNum]), name="Amp 0")
+            colorNum += 1
+
+            if self.PlotFitCheck.isChecked():
+                t, m ,popt,pcov = self.fit_sweep(x0,y0)
+                self.SelectedPlot.plot(t,m,pen=pyqtgraph.mkColor(self.color_cycle[colorNum]), name="Amp 0 Fit")
+                colorNum += 1
+
         if self.SweepAmp1.isChecked():
-            y1 = Selection.sweep.adc1Curr
-            self.SelectedPlot.plot(x,y1,pen="b", name="Amp 1")
+            if self.RemoveHystCheck.isChecked():
+                x1, y1 = self.remove_hyst(x, Selection.sweep.adc1Curr)
+            else:
+                x1 = x
+                y1 = Selection.sweep.adc1Curr
+            
+            self.SelectedPlot.plot(x1,y1,pen=pyqtgraph.mkColor(self.color_cycle[colorNum]), name="Amp 1")
+            colorNum += 1
+
+            if self.PlotFitCheck.isChecked():
+                t, m ,popt,pcov = self.fit_sweep(x1,y1)
+                self.SelectedPlot.plot(t,m,pen=pyqtgraph.mkColor(self.color_cycle[colorNum]), name="Amp 1 Fit")
+                colorNum += 1
+
         if self.SweepAmp2.isChecked():
-            y2 = Selection.sweep.adc2Curr
-            self.SelectedPlot.plot(x,y2,pen="r", name="Amp 2")
+            if self.RemoveHystCheck.isChecked():
+                x2, y2 = self.remove_hyst(x, Selection.sweep.adc2Curr)
+            else:
+                x2 = x
+                y2 = Selection.sweep.adc2Curr
+
+            self.SelectedPlot.plot(x2,y2,pen=pyqtgraph.mkColor(self.color_cycle[colorNum]), name="Amp 2")
+            colorNum += 1
+
+            if self.PlotFitCheck.isChecked():
+                t, m ,popt,pcov = self.fit_sweep(x2,y2)
+                self.SelectedPlot.plot(t,m,pen=pyqtgraph.mkColor(self.color_cycle[colorNum]), name="Amp 2 Fit")
+                colorNum += 1
 
         # We do some Labeling
         self.SelectedPlot.setTitle(title=f"Sweep {indexNum} at {round(Selection.tInitial/1000,2)} seconds")
@@ -487,6 +529,72 @@ class MasterWindow(Ui_UDIP_Viewer):
         if self.PD2Check.isChecked():
             self.SelectedPlot.plot(timeSens, pd2List,pen=pyqtgraph.mkColor(self.color_cycle[colorNum]), name="PD2")
             colorNum += 1
+
+    def fit_sweep(self, x, y):
+        # Function that is given a sweep x and y and fits it to a langmuir thing
+        def model(x,xa,b,m1,n,t,V0):
+            #electron retardation
+            ret = np.zeros(len(x))
+            ret[x <= xa] = seg1(x[x <= xa],m1) - seg1(xa, m1) + b
+            ret[x > xa] = seg2(x[x > xa],n,t,V0) - seg2(xa,n,t,V0) + seg1(xa,m1) - seg1(xa, m1) + b
+            return ret
+            
+        def seg1(x,m):#linear--full model square root
+            return m * x
+
+        def seg2(x,n,t,V0):# square root
+            q_e = 1.602 * 10**-19 #C                charge of an electron
+            K_b = 1.381 * 10**-23 #m^2*kg/(s^2*K)   boltzman constant
+            m_e = 9.109 * 10**-31 #kg               mass of an electron
+            R = (3./16.) * 0.0254 #radius of probe
+            L = (3.25) * 0.0254 #length of probe
+            A = 2. * np.pi * R * L + np.pi * (R ** 2) #area of probe cylinder with out a bottom
+            
+            k = q_e / (K_b * t)
+            I0 =n * q_e * np.sqrt(K_b * t / (2. * np.pi * m_e)) * A / (10**-9)
+            return I0 * np.sqrt(1 + k*(x + V0))
+
+        def get_fit(x,y):
+            g = [0.6,-14,80, 5*(10**10),1000,-0.5]    #intial guess
+            b = ((-3,-np.inf,-np.inf,0,0,-3),(3,np.inf,np.inf,np.inf,10000,3)) #bounds
+            popt, pcov = optimize.curve_fit(model,x,y,g,bounds=b)
+            #print(popt)
+            max_1 = max(x)
+            min_1 = min(x)
+            t = np.linspace(min_1,max_1,num=60)
+            return t, model(t,*popt),popt,pcov #popt[0:xa,1:b,2:m1,3:n,4:t,5:V0]
+
+        return get_fit(x,y)
+        
+    def remove_hyst(self, x1,y1):
+        # +6v range: 1 -> 131
+        # 0v = 0, 132,264
+        # -6v range: 133 -> 263
+
+        x2 = []
+        y2 = []
+
+        # +6v side
+        a = range(1,132)
+        b = np.flip(a)
+        i = 0
+        while i < len(a) - 1:
+            x2.append((x1[a[i]] + x1[b[i]])/2)
+            y2.append((y1[a[i]] + y1[b[i]])/2)
+
+            i += 1
+
+        # -6v side
+        a = range(133, 264)
+        b = np.flip(a)
+        i = 0
+        while i < len(a) - 1:
+            x2.append((x1[a[i]] + x1[b[i]])/2)
+            y2.append((y1[a[i]] + y1[b[i]])/2)
+
+            i += 1
+
+        return x2, y2
 
     # -- Helper Functions -- (Mainly for Gui logic)
     # Add a plot to the display
