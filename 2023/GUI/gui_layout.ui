@@ -153,6 +153,11 @@
                      </item>
                      <item>
                       <property name="text">
+                       <string>Dense</string>
+                      </property>
+                     </item>
+                     <item>
+                      <property name="text">
                        <string>Constant</string>
                       </property>
                      </item>
@@ -171,6 +176,13 @@
                   <widget class="QCheckBox" name="PlotFitCheck">
                    <property name="text">
                     <string>Add Fit Curve</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QCheckBox" name="DebugCheckBox">
+                   <property name="text">
+                    <string>Debug</string>
                    </property>
                   </widget>
                  </item>
@@ -288,6 +300,9 @@
                  </item>
                  <item>
                   <widget class="QCheckBox" name="PD2ConstCheck">
+                   <property name="enabled">
+                    <bool>false</bool>
+                   </property>
                    <property name="text">
                     <string>Photodiode 2</string>
                    </property>

@@ -22,7 +22,7 @@ from PyQt5 import QtCore, QtWidgets
 from PyQt5.QtWidgets import *
 
 # General Imports
-import UDIP_Lib_V20 as UDIP_Lib
+import UDIP_Lib_V23_1 as UDIP_Lib
 import pyqtgraph
 import numpy as np
 from scipy import optimize
@@ -42,7 +42,7 @@ class MasterWindow(Ui_UDIP_Viewer):
         Ui_UDIP_Viewer.__init__(self)
 
         # Global Variables
-        self.filename = "UDIP0000.DAT"
+        self.filename = "UDIP0031.DAT"
         self.Outpath = "Output/"
 
         # Arrays used to collect relevant indexies for each packet
@@ -52,11 +52,13 @@ class MasterWindow(Ui_UDIP_Viewer):
         self.ind_large = []
         self.ind_burst = []
         self.ind_constant = []
+        self.ind_Dense = []
 
         # List of dictionaries used to do some things
         self.sensor_time = []
         self.constant_time = []
         self.sweep_time = []
+        self.dense_time = []
 
         # Number of plots that are currently displayed in the PlotLayoutWidget
         self.NumPlots = 0
@@ -119,6 +121,9 @@ class MasterWindow(Ui_UDIP_Viewer):
             self.ConstantSelectionBox.setVisible(False)
             self.IndexSelectionCombo.addItems([str(x) for x in self.ind_medium])
         elif self.SweepTypeCombo.currentIndex() == 1:
+            self.ConstantSelectionBox.setVisible(False)
+            self.IndexSelectionCombo.addItems([str(x) for x in self.ind_Dense])
+        elif self.SweepTypeCombo.currentIndex() == 2:
             self.ConstantSelectionBox.setVisible(True)
             self.IndexSelectionCombo.addItems([str(x) for x in self.ind_constant])
         self.IndexSelectionCombo.setCurrentIndex(i)
@@ -154,7 +159,7 @@ class MasterWindow(Ui_UDIP_Viewer):
                 indexNums = [self.find_closest("Sensor",self.StartTime.value()),self.find_closest("Sensor",self.EndTime.value())]
                 # Plot Constant
                 self.Plot_Sensor(indexNums)
-            elif self.SweepTypeCombo.currentIndex() == 1:
+            elif self.SweepTypeCombo.currentIndex() == 2:
                 # Find The Correct Index
                 if self.TimeIndexButton.isChecked():
                     indexNum = self.find_closest("Constant",self.TimeMono.value())
@@ -162,14 +167,23 @@ class MasterWindow(Ui_UDIP_Viewer):
                     indexNum = int(self.IndexSelectionCombo.currentText())
                 # Plot Sweep
                 self.Plot_Constant(indexNum)
-            else:
+            elif self.SweepTypeCombo.currentIndex() == 0:
                 # Find The Corrext Index
                 if self.TimeIndexButton.isChecked():
-                    indexNum = self.find_closest("Sweep",self.TimeMono.value())
+                    indexNum = self.find_closest("Med",self.TimeMono.value())
                 else:
                     indexNum = int(self.IndexSelectionCombo.currentText())
                 # Plot Sweep
-                self.Plot_sweep(indexNum)
+                self.Plot_Med_sweep(indexNum)
+
+            elif self.SweepTypeCombo.currentIndex() == 1:
+                # Find The Corrext Index
+                if self.TimeIndexButton.isChecked():
+                    indexNum = self.find_closest("Dense",self.TimeMono.value())
+                else:
+                    indexNum = int(self.IndexSelectionCombo.currentText())
+                # Plot Sweep
+                self.Plot_Den_sweep(indexNum)
         # except:
         #     pass
 
@@ -196,13 +210,19 @@ class MasterWindow(Ui_UDIP_Viewer):
             elif(p.pcktType == 0x30):         # Constant Sweep Packet Type
                 self.constant_time.append({"time": p.tInitial, "index": i})
                 self.ind_constant.append(i)
+            elif(p.pcktType == 0x12):
+                # print("Ding")
+                self.dense_time.append({"time": p.tInitial, "index": i})
+                self.ind_Dense.append(i)
+            # else:
+                # print(p.pcktType)
             # These Two Arent Used
-            elif(p.pcktType ==  0x11):        # Large Sweep Packet Type
-                self.ind_large.append(i)
-            elif(p.pcktType == 0x20):         # Burst Sweep Packet Type
-                self.ind_burst.append(i)
-            else:
-                print("How?")
+            # elif(p.pcktType ==  0x11):        # Large Sweep Packet Type
+            #     self.ind_large.append(i)
+            # elif(p.pcktType == 0x20):         # Burst Sweep Packet Type
+            #     self.ind_burst.append(i)
+            # elif(p.pcktType == 0x30):
+            #     self.ind_
             
     # finds the packet that is closest to the selected time(s)
     def find_closest(self, type: str, time: float):
@@ -230,13 +250,20 @@ class MasterWindow(Ui_UDIP_Viewer):
                     # once the time of the current selection is bigger than the requested time, return the previous one
                     if i["time"] > time:
                         return self.constant_time[i]["index"]
+    
+            # Goes through the list of times
+            if type == "Dense":
+                for i in self.dense_time:
+                    # once the time of the current selection is bigger than the requested time, return the previous one
+                    if i["time"] > time:
+                        return self.dense_time[i]["index"]
 
             # if the provided time is larger than any possible time, return the final index
             return i["index"]
         except:
             pass
 
-    def Plot_sweep(self, indexNum):    
+    def Plot_Med_sweep(self, indexNum):    
         # Using the chosen packet number, we plot the corresponding sweep
         Selection = self.packets[indexNum]
 
@@ -269,26 +296,9 @@ class MasterWindow(Ui_UDIP_Viewer):
         self.SensorInitialTable.item(9,0).setText(str(round(SensInit.magZ,3)))
         self.SensorInitialTable.item(10,0).setText(str(round(SensInit.temperature_d,3)))
         self.SensorInitialTable.item(11,0).setText(str(round(SensInit.temperature_p,3)))
-        self.SensorInitialTable.item(12,0).setText(str(round(SensInit.temperature_s,3)))
+        # self.SensorInitialTable.item(12,0).setText(str(round(SensInit.temperature_s,3)))
         self.SensorInitialTable.item(13,0).setText(str(round(SensInit.pd_1,3)))
-        self.SensorInitialTable.item(14,0).setText(str(round(SensInit.pd_2,3)))
-
-
-        # self.SensorFinalTable.item(0,0).setText(str(round(SensFinal.accX,3)))
-        # self.SensorFinalTable.item(1,0).setText(str(round(SensFinal.accY,3)))
-        # self.SensorFinalTable.item(2,0).setText(str(round(SensFinal.accZ,3)))
-        # self.SensorFinalTable.item(3,0).setText(str(round(SensFinal.accH,3)))
-        # self.SensorFinalTable.item(4,0).setText(str(round(SensFinal.gyroX,3)))
-        # self.SensorFinalTable.item(5,0).setText(str(round(SensFinal.gyroY,3)))
-        # self.SensorFinalTable.item(6,0).setText(str(round(SensFinal.gyroZ,3)))
-        # self.SensorFinalTable.item(7,0).setText(str(round(SensFinal.magX,3)))
-        # self.SensorFinalTable.item(8,0).setText(str(round(SensFinal.magY,3)))
-        # self.SensorFinalTable.item(9,0).setText(str(round(SensFinal.magZ,3)))
-        # self.SensorFinalTable.item(10,0).setText(str(round(SensFinal.temperature_d,3)))
-        # self.SensorFinalTable.item(11,0).setText(str(round(SensFinal.temperature_p,3)))
-        # self.SensorFinalTable.item(12,0).setText(str(round(SensFinal.temperature_s,3)))
-        # self.SensorFinalTable.item(13,0).setText(str(round(SensFinal.pd_1,3)))
-        # self.SensorFinalTable.item(14,0).setText(str(round(SensFinal.pd_2,3)))
+        # self.SensorInitialTable.item(14,0).setText(str(round(SensInit.pd_2,3)))
 
         # X is voltage always
         x = Selection.sweep.sweepVoltage
@@ -300,6 +310,10 @@ class MasterWindow(Ui_UDIP_Viewer):
             else:
                 x0 = x
                 y0 = Selection.sweep.adc0Curr
+
+            if(self.DebugCheckBox.isChecked()):
+                x0, y0 = self.cutData(x0, y0)
+                
             
             self.SelectedPlot.plot(x0,y0,pen=pyqtgraph.mkColor(self.color_cycle[colorNum]), name="Amp 0")
             colorNum += 1
@@ -321,6 +335,7 @@ class MasterWindow(Ui_UDIP_Viewer):
 
             if self.PlotFitCheck.isChecked():
                 t, m ,popt,pcov = self.fit_sweep(x1,y1)
+                # print(t, m ,popt, pcov)
                 self.SelectedPlot.plot(t,m,pen=pyqtgraph.mkColor(self.color_cycle[colorNum]), name="Amp 1 Fit")
                 colorNum += 1
 
@@ -342,7 +357,103 @@ class MasterWindow(Ui_UDIP_Viewer):
         # We do some Labeling
         self.SelectedPlot.setTitle(title=f"Sweep {indexNum} at {round(Selection.tInitial/1000,2)} seconds")
         self.SelectedPlot.setLabel("bottom",text="Voltage",units="V")
-        self.SelectedPlot.setLabel("left",text="Current",units="I")
+        self.SelectedPlot.setLabel("left",text="Current",units="A")
+
+    def Plot_Den_sweep(self, indexNum):    
+        # Using the chosen packet number, we plot the corresponding sweep
+        Selection = self.packets[indexNum]
+
+        # Update GUI Logic and display relevant sensor data
+        self.TimeMono.setValue(Selection.tInitial/1000)
+        for i, p in enumerate(self.sweep_time):
+            if p["index"] == indexNum:
+                self.IndexSelectionCombo.setCurrentIndex(i)
+                break
+
+        # Index for Color Cycle
+        colorNum = 0
+        
+        self.IndexSelectionCombo.setCurrentIndex(self.ind_Dense.index(indexNum))
+
+        # There are two sensor packets retrieved here, but the desision was made to use only the inital one at it matches the final 99% of the time
+        SensInit = self.packets[self.find_closest("Sensor", Selection.tInitial/1000)]
+        # SensFinal = self.packets[self.find_closest("Sensor", Selection.tFinal/1000)]
+
+        # Sensor Things
+        self.SensorInitialTable.item(0,0).setText(str(round(SensInit.accX,3)))
+        self.SensorInitialTable.item(1,0).setText(str(round(SensInit.accY,3)))
+        self.SensorInitialTable.item(2,0).setText(str(round(SensInit.accZ,3)))
+        self.SensorInitialTable.item(3,0).setText(str(round(SensInit.accH,3)))
+        self.SensorInitialTable.item(4,0).setText(str(round(SensInit.gyroX,3)))
+        self.SensorInitialTable.item(5,0).setText(str(round(SensInit.gyroY,3)))
+        self.SensorInitialTable.item(6,0).setText(str(round(SensInit.gyroZ,3)))
+        self.SensorInitialTable.item(7,0).setText(str(round(SensInit.magX,3)))
+        self.SensorInitialTable.item(8,0).setText(str(round(SensInit.magY,3)))
+        self.SensorInitialTable.item(9,0).setText(str(round(SensInit.magZ,3)))
+        self.SensorInitialTable.item(10,0).setText(str(round(SensInit.temperature_d,3)))
+        self.SensorInitialTable.item(11,0).setText(str(round(SensInit.temperature_p,3)))
+        # self.SensorInitialTable.item(12,0).setText(str(round(SensInit.temperature_s,3)))
+        self.SensorInitialTable.item(13,0).setText(str(round(SensInit.pd_1,3)))
+        # self.SensorInitialTable.item(14,0).setText(str(round(SensInit.pd_2,3)))
+
+        # X is voltage always
+        x = Selection.sweep.sweepVoltage
+
+        # The current was amplified three times, user can choose amp level to display (or multiple)
+        if self.SweepAmp0.isChecked():
+            if self.RemoveHystCheck.isChecked():
+                x0, y0 = self.remove_hyst(x, Selection.sweep.adc0Curr)
+            else:
+                x0 = x
+                y0 = Selection.sweep.adc0Curr
+
+            if(self.DebugCheckBox.isChecked()):
+                x0, y0 = self.cutData(x0, y0)
+                
+            
+            self.SelectedPlot.plot(x0,y0,pen=pyqtgraph.mkColor(self.color_cycle[colorNum]), name="Amp 0")
+            colorNum += 1
+
+            if self.PlotFitCheck.isChecked():
+                t, m ,popt,pcov = self.fit_sweep(x0,y0)
+                self.SelectedPlot.plot(t,m,pen=pyqtgraph.mkColor(self.color_cycle[colorNum]), name="Amp 0 Fit")
+                colorNum += 1
+
+        if self.SweepAmp1.isChecked():
+            if self.RemoveHystCheck.isChecked():
+                x1, y1 = self.remove_hyst(x, Selection.sweep.adc1Curr)
+            else:
+                x1 = x
+                y1 = Selection.sweep.adc1Curr
+            
+            self.SelectedPlot.plot(x1,y1,pen=pyqtgraph.mkColor(self.color_cycle[colorNum]), name="Amp 1")
+            colorNum += 1
+
+            if self.PlotFitCheck.isChecked():
+                t, m ,popt,pcov = self.fit_sweep(x1,y1)
+                # print(t, m ,popt, pcov)
+                self.SelectedPlot.plot(t,m,pen=pyqtgraph.mkColor(self.color_cycle[colorNum]), name="Amp 1 Fit")
+                colorNum += 1
+
+        if self.SweepAmp2.isChecked():
+            if self.RemoveHystCheck.isChecked():
+                x2, y2 = self.remove_hyst(x, Selection.sweep.adc2Curr)
+            else:
+                x2 = x
+                y2 = Selection.sweep.adc2Curr
+
+            self.SelectedPlot.plot(x2,y2,pen=pyqtgraph.mkColor(self.color_cycle[colorNum]), name="Amp 2")
+            colorNum += 1
+
+            if self.PlotFitCheck.isChecked():
+                t, m ,popt,pcov = self.fit_sweep(x2,y2)
+                self.SelectedPlot.plot(t,m,pen=pyqtgraph.mkColor(self.color_cycle[colorNum]), name="Amp 2 Fit")
+                colorNum += 1
+
+        # We do some Labeling
+        self.SelectedPlot.setTitle(title=f"Sweep {indexNum} at {round(Selection.tInitial/1000,2)} seconds")
+        self.SelectedPlot.setLabel("bottom",text="Voltage",units="V")
+        self.SelectedPlot.setLabel("left",text="Current",units="A")
 
     def Plot_Constant(self, indexNum):
         # Using the chosen packet number, we plot the corresponding sweep
@@ -358,7 +469,6 @@ class MasterWindow(Ui_UDIP_Viewer):
         self.IndexSelectionCombo.setCurrentIndex(self.ind_constant.index(indexNum))
         
         SensInit = self.packets[self.find_closest("Sensor", Selection.tInitial/1000)]
-        SensFinal = self.packets[self.find_closest("Sensor", Selection.tFinal/1000)]
 
         self.SensorInitialTable.item(0,0).setText(str(round(SensInit.accX,3)))
         self.SensorInitialTable.item(1,0).setText(str(round(SensInit.accY,3)))
@@ -372,25 +482,11 @@ class MasterWindow(Ui_UDIP_Viewer):
         self.SensorInitialTable.item(9,0).setText(str(round(SensInit.magZ,3)))
         self.SensorInitialTable.item(10,0).setText(str(round(SensInit.temperature_d,3)))
         self.SensorInitialTable.item(11,0).setText(str(round(SensInit.temperature_p,3)))
-        self.SensorInitialTable.item(12,0).setText(str(round(SensInit.temperature_s,3)))
+        # self.SensorInitialTable.item(12,0).setText(str(round(SensInit.temperature_s,3)))
         self.SensorInitialTable.item(13,0).setText(str(round(SensInit.pd_1,3)))
-        self.SensorInitialTable.item(14,0).setText(str(round(SensInit.pd_2,3)))
+        # self.SensorInitialTable.item(14,0).setText(str(round(SensInit.pd_2,3)))
 
-        self.SensorFinalTable.item(0,0).setText(str(round(SensFinal.accX,3)))
-        self.SensorFinalTable.item(1,0).setText(str(round(SensFinal.accY,3)))
-        self.SensorFinalTable.item(2,0).setText(str(round(SensFinal.accZ,3)))
-        self.SensorFinalTable.item(3,0).setText(str(round(SensFinal.accH,3)))
-        self.SensorFinalTable.item(4,0).setText(str(round(SensFinal.gyroX,3)))
-        self.SensorFinalTable.item(5,0).setText(str(round(SensFinal.gyroY,3)))
-        self.SensorFinalTable.item(6,0).setText(str(round(SensFinal.gyroZ,3)))
-        self.SensorFinalTable.item(7,0).setText(str(round(SensFinal.magX,3)))
-        self.SensorFinalTable.item(8,0).setText(str(round(SensFinal.magY,3)))
-        self.SensorFinalTable.item(9,0).setText(str(round(SensFinal.magZ,3)))
-        self.SensorFinalTable.item(10,0).setText(str(round(SensFinal.temperature_d,3)))
-        self.SensorFinalTable.item(11,0).setText(str(round(SensFinal.temperature_p,3)))
-        self.SensorFinalTable.item(12,0).setText(str(round(SensFinal.temperature_s,3)))
-        self.SensorFinalTable.item(13,0).setText(str(round(SensFinal.pd_1,3)))
-        self.SensorFinalTable.item(14,0).setText(str(round(SensFinal.pd_2,3)))
+        
 
         # X is the number of computer clock steps (100)
         x = np.arange(0, Selection.nSteps, 1)
@@ -474,9 +570,9 @@ class MasterWindow(Ui_UDIP_Viewer):
                 magZList.append(packet.magZ)
                 tmpDList.append(packet.temperature_d)
                 tmpPList.append(packet.temperature_p)
-                tmpSList.append(packet.temperature_s)
+                # tmpSList.append(packet.temperature_s)
                 pd1List.append(packet.pd_1)
-                pd2List.append(packet.pd_2)
+                # pd2List.append(packet.pd_2)
         
 
         # Plot Based on User Selection
@@ -537,6 +633,9 @@ class MasterWindow(Ui_UDIP_Viewer):
             ret = np.zeros(len(x))
             ret[x <= xa] = seg1(x[x <= xa],m1) - seg1(xa, m1) + b
             ret[x > xa] = seg2(x[x > xa],n,t,V0) - seg2(xa,n,t,V0) + seg1(xa,m1) - seg1(xa, m1) + b
+
+            # print(f"Temp I think: {n}")
+            # print
             return ret
             
         def seg1(x,m):#linear--full model square root
@@ -549,31 +648,36 @@ class MasterWindow(Ui_UDIP_Viewer):
             R = (3./16.) * 0.0254 #radius of probe
             L = (3.25) * 0.0254 #length of probe
             A = 2. * np.pi * R * L + np.pi * (R ** 2) #area of probe cylinder with out a bottom
-            
+
             k = q_e / (K_b * t)
             I0 =n * q_e * np.sqrt(K_b * t / (2. * np.pi * m_e)) * A / (10**-9)
-            return I0 * np.sqrt(1 + k*(x + V0))
+            return I0 * np.sqrt(abs(1 + k*(x + V0)))
 
         def get_fit(x,y):
             g = [0.6,-14,80, 5*(10**10),1000,-0.5]    #intial guess
             b = ((-3,-np.inf,-np.inf,0,0,-3),(3,np.inf,np.inf,np.inf,10000,3)) #bounds
             popt, pcov = optimize.curve_fit(model,x,y,g,bounds=b)
-            #print(popt)
             max_1 = max(x)
             min_1 = min(x)
             t = np.linspace(min_1,max_1,num=60)
+
+            print(popt)
+            # Note from Isaac: popt = [xa (Break from linear to Exponential), b (y intercept), m1 (slope of linear part), n (density), t (temp), v0 (plasma potential)]
+            print(f"Temp: {popt[4]}")
+            print(f"Density: {popt[3]}")
             return t, model(t,*popt),popt,pcov #popt[0:xa,1:b,2:m1,3:n,4:t,5:V0]
 
         return get_fit(x,y)
         
     def remove_hyst(self, x1,y1):
         # +6v range: 1 -> 131
-        # 0v = 0, 132,264
+        # 0v = 0, 132, 264
         # -6v range: 133 -> 263
 
         x2 = []
         y2 = []
 
+        # if()
         # +6v side
         a = range(1,132)
         b = np.flip(a)
@@ -594,8 +698,56 @@ class MasterWindow(Ui_UDIP_Viewer):
 
             i += 1
 
-        return x2, y2
+        # print(f"X2: {x2}")
+        # print(f"Y2: {y2}")
+        # print(len(x2), len(x1))
 
+        return x2, y2
+    
+    def cutData(self, x1, y1):
+        x2 = []
+        y2 = []
+
+        rem = 16
+
+        # +6v side up
+        a = range(0,130)
+        i = 0
+
+        while i < len(a):
+            if(i != rem):
+                x2.append(x1[a[i]])
+                y2.append(y1[a[i]])
+            elif(i < len(a)/2):
+                rem = rem/2 + i
+            else:
+                rem = rem*2 + i
+
+            i += 1
+        
+        
+        # -6v side down
+        rem = 16
+        a = range(131,260)
+        i = 0
+
+        while i < len(a):
+            if(i != rem):
+                x2.append(x1[a[i]])
+                y2.append(y1[a[i]])
+            elif(i < len(a)/2):
+                rem = rem/2 + i
+            else:
+                rem = rem*2 + i
+
+            # print(f"Rem: {rem} i: {i}")
+
+            i += 1
+
+        print(len(x2))
+
+        return x2,y2
+        
     # -- Helper Functions -- (Mainly for Gui logic)
     # Add a plot to the display
     def Add_Plot(self):
@@ -608,7 +760,7 @@ class MasterWindow(Ui_UDIP_Viewer):
         self.GraphicsLayout.removeItem(self.PlotSelectionCombo.currentData())
         self.PlotSelectionCombo.removeItem(self.PlotSelectionCombo.currentIndex())
         self.PlotSelectionCombo.setCurrentIndex(self.PlotSelectionCombo.count() - 1)
-        
+    
         
 # -- Main --       
 import sys
